@@ -1,6 +1,5 @@
 import { Image } from "expo-image";
-import { StyleSheet, FlatList, Text } from "react-native";
-import { useState, useEffect } from "react";
+import { StyleSheet } from "react-native";
 
 import { HelloWave } from "@/components/hello-wave";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
@@ -8,39 +7,27 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import SignOutButton from "@/components/social-auth-buttons/sign-out-button";
 import { useAuthContext } from "@/hooks/use-auth-context";
-import { supabase } from "@/lib/supabase";
 
-import { gql } from "@apollo/client";
+import { graphql } from "@/gql";
 import { useQuery } from "@apollo/client/react";
 
-const GET_LOCATIONS = gql`
-  query GetLocations {
-    locations {
-      id
-      name
-      description
-      photo
+const GET_IRIS = graphql(`
+  query HelloWorld {
+    irisCollection {
+      edges {
+        node {
+          Id
+          SepalWidthCm
+          PetalLengthCm
+        }
+      }
     }
   }
-`;
+`);
 
 export default function HomeScreen() {
   const { profile } = useAuthContext();
-  //   const [users, setUsers] = useState([]);
-  const { loading, error, data }: any = useQuery(GET_LOCATIONS);
-
-  //   useEffect(() => {
-  //     getUsers();
-  //   }, []);
-
-  //   async function getUsers() {
-  //     const { data }: any = await supabase.from("test").select();
-  //     setUsers(data);
-  //   }
-
-  if (loading) return <Text>Loading...</Text>;
-
-  if (error) return <Text>Error: {error.message}</Text>;
+  const { data, fetchMore }: any = useQuery(GET_IRIS);
 
   return (
     <ParallaxScrollView
@@ -62,17 +49,12 @@ export default function HomeScreen() {
         <ThemedText type="subtitle">Full name</ThemedText>
         <ThemedText>{profile?.full_name}</ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Name</ThemedText>
-        <ThemedText>{data.locations[0].name}</ThemedText>
-        <ThemedText type="subtitle">Description</ThemedText>
-        <ThemedText>{data.locations[0].description}</ThemedText>
-      </ThemedView>
-      {/* <FlatList
-        data={users}
-        keyExtractor={(item: any) => item.id.toString()}
-        renderItem={({ item }) => <Text style={styles.item}>{item.name}</Text>}
-      /> */}
+      {data?.irisCollection?.edges.map(({ node }: any) => (
+        <>
+          <ThemedText type="subtitle">SepalWidthCm</ThemedText>
+          <ThemedText>{node.SepalWidthCm}</ThemedText>
+        </>
+      ))}
       <SignOutButton />
     </ParallaxScrollView>
   );
