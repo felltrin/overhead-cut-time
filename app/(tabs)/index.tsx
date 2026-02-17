@@ -10,18 +10,37 @@ import SignOutButton from "@/components/social-auth-buttons/sign-out-button";
 import { useAuthContext } from "@/hooks/use-auth-context";
 import { supabase } from "@/lib/supabase";
 
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
+
+const GET_LOCATIONS = gql`
+  query GetLocations {
+    locations {
+      id
+      name
+      description
+      photo
+    }
+  }
+`;
+
 export default function HomeScreen() {
   const { profile } = useAuthContext();
-  const [users, setUsers] = useState([]);
+  //   const [users, setUsers] = useState([]);
+  const { loading, error, data }: any = useQuery(GET_LOCATIONS);
 
-  useEffect(() => {
-    getUsers();
-  }, []);
+  //   useEffect(() => {
+  //     getUsers();
+  //   }, []);
 
-  async function getUsers() {
-    const { data }: any = await supabase.from("test").select();
-    setUsers(data);
-  }
+  //   async function getUsers() {
+  //     const { data }: any = await supabase.from("test").select();
+  //     setUsers(data);
+  //   }
+
+  if (loading) return <Text>Loading...</Text>;
+
+  if (error) return <Text>Error: {error.message}</Text>;
 
   return (
     <ParallaxScrollView
@@ -43,11 +62,17 @@ export default function HomeScreen() {
         <ThemedText type="subtitle">Full name</ThemedText>
         <ThemedText>{profile?.full_name}</ThemedText>
       </ThemedView>
-      <FlatList
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Name</ThemedText>
+        <ThemedText>{data.locations[0].name}</ThemedText>
+        <ThemedText type="subtitle">Description</ThemedText>
+        <ThemedText>{data.locations[0].description}</ThemedText>
+      </ThemedView>
+      {/* <FlatList
         data={users}
         keyExtractor={(item: any) => item.id.toString()}
         renderItem={({ item }) => <Text style={styles.item}>{item.name}</Text>}
-      />
+      /> */}
       <SignOutButton />
     </ParallaxScrollView>
   );

@@ -14,6 +14,29 @@ import { useAuthContext } from "@/hooks/use-auth-context";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import AuthProvider from "@/providers/auth-provider";
 
+import { ApolloClient, HttpLink, InMemoryCache, gql } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client/react";
+
+const client = new ApolloClient({
+  link: new HttpLink({ uri: "https://flyby-router-demo.herokuapp.com/" }),
+  cache: new InMemoryCache(),
+});
+
+client
+  .query({
+    query: gql`
+      query GetLocations {
+        locations {
+          id
+          name
+          description
+          photo
+        }
+      }
+    `,
+  })
+  .then((result) => console.log(result));
+
 // Separate RootNavigator so we can access the AuthContext
 function RootNavigator() {
   const { isLoggedIn } = useAuthContext();
@@ -44,12 +67,14 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
-        <SplashScreenController />
-        <RootNavigator />
-        <StatusBar style="auto" />
-      </AuthProvider>
-    </ThemeProvider>
+    <ApolloProvider client={client}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <AuthProvider>
+          <SplashScreenController />
+          <RootNavigator />
+          <StatusBar style="auto" />
+        </AuthProvider>
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }
