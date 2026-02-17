@@ -53,7 +53,7 @@ const cache = new InMemoryCache({
 });
 
 const httpLink = new HttpLink({
-  uri: "http://localhost:8081/graphql/v1",
+  uri: process.env.EXPO_PUBLIC_SUPABASE_PROJECT_URI ?? "",
 });
 
 const authLink = setContext(async (_, { header }) => {
@@ -69,7 +69,6 @@ const authLink = setContext(async (_, { header }) => {
 });
 
 const client = new ApolloClient({
-  //   link: new HttpLink({ uri: "https://flyby-router-demo.herokuapp.com/" }),
   link: authLink.concat(httpLink),
   cache,
 });

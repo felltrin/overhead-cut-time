@@ -3,8 +3,8 @@ import { addTypenameSelectionDocumentTransform } from "@graphql-codegen/client-p
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "http://localhost:8081/graphql/v1",
-  documents: "src/**/*.tsx",
+  schema: "http://localhost:54321/graphql/v1",
+  documents: "**/*.tsx",
   overwrite: true,
   ignoreNoDocuments: true,
   generates: {
