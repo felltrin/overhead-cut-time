@@ -35,12 +35,15 @@ npm run reset-project
 
 This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
+## Tech Stack Docs
 
 To learn more about developing your project with Expo, look at the following resources:
 
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [GraphQL](https://graphql.org/learn/introduction/): Docs for the Data API used in this project
+- [GraphQL Codegen](https://the-guild.dev/graphql/codegen/docs/getting-started): Docs for theplugin-based tools that helps you get the best out of your GraphQL stack
+- [Supabase](https://supabase.com/docs/guides/graphql): The BaaS for the project
 
 ## Join the community
 
